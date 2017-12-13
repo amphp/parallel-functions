@@ -17,7 +17,7 @@ composer require amphp/parallel-functions
 
 ## Documentation
 
-Documentation is bundled within this repository in the [`./docs`](./docs) directory.
+Documentation can be found on [amphp.org](https://amphp.org/parallel-functions/) as well as in the [`./docs`](./docs) directory.
 
 ## Versioning
 
