@@ -3,6 +3,7 @@
 namespace Amp\ParallelFunctions;
 
 use Amp\MultiReasonException;
+use Amp\Parallel\Sync\SerializationException;
 use Amp\ParallelFunctions\Internal\ParallelTask;
 use Amp\Promise;
 use SuperClosure\Serializer;
@@ -29,8 +30,12 @@ function parallel(callable $callable): callable {
         $payload = $callable;
         $type = ParallelTask::TYPE_SIMPLE;
     } elseif ($callable instanceof \Closure) {
-        $payload = $serializer->serialize($callable);
-        $type = ParallelTask::TYPE_CLOSURE;
+        try {
+            $payload = $serializer->serialize($callable);
+            $type = ParallelTask::TYPE_CLOSURE;
+        } catch (SerializationException $e) {
+            throw new \Error('Unserializable closure: ' . $e->getMessage(), 0, $e);
+        }
     } else {
         throw new \Error('Unsupported callable type: ' . \gettype($callable));
     }
