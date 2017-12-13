@@ -4,12 +4,12 @@ namespace Amp\ParallelFunctions\Test;
 
 use Amp\MultiReasonException;
 use Amp\PHPUnit\TestCase;
-use function Amp\ParallelFunctions\parallelMap;
+use function Amp\ParallelFunctions\map;
 use function Amp\Promise\wait;
 
-class ParallelMapTest extends TestCase {
+class MapTest extends TestCase {
     public function testValidInput() {
-        $this->assertSame([3, 4, 5], wait(parallelMap([1, 2, 3], function ($input) {
+        $this->assertSame([3, 4, 5], wait(map([1, 2, 3], function ($input) {
             return $input + 2;
         })));
     }
@@ -17,7 +17,7 @@ class ParallelMapTest extends TestCase {
     public function testException() {
         $this->expectException(MultiReasonException::class);
 
-        wait(parallelMap([1, 2, 3], function () {
+        wait(map([1, 2, 3], function () {
             throw new \Exception;
         }));
     }
@@ -30,7 +30,7 @@ class ParallelMapTest extends TestCase {
         ];
 
         try {
-            wait(parallelMap($files, function ($args) {
+            wait(map($files, function ($args) {
                 list($id, $filename) = $args;
 
                 if ($id === 0) {

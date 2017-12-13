@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use function Amp\ParallelFunctions\parallelMap;
+use function Amp\ParallelFunctions\map;
 use function Amp\Promise\wait;
 
 $start = \microtime(true);
@@ -11,6 +11,6 @@ $start = \microtime(true);
 //
 // All communication is non-blocking and can be used in an event loop. Amp\Promise\wait() can be used to use the library
 // in a traditional synchronous environment.
-wait(parallelMap([1, 2, 3], 'sleep'));
+wait(map([1, 2, 3], 'sleep'));
 
 print 'Took ' . (\microtime(true) - $start) . ' milliseconds.' . \PHP_EOL;

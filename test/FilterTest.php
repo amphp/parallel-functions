@@ -4,14 +4,14 @@ namespace Amp\ParallelFunctions\Test;
 
 use Amp\MultiReasonException;
 use Amp\PHPUnit\TestCase;
-use function Amp\ParallelFunctions\parallelFilter;
+use function Amp\ParallelFunctions\filter;
 use function Amp\Promise\wait;
 
-class ParallelFilterTest extends TestCase {
+class FilterTest extends TestCase {
     public function testWithoutCallback() {
         $input = [1, 0, 3, false, true, null];
 
-        $this->assertSame(\array_filter($input), wait(parallelFilter($input)));
+        $this->assertSame(\array_filter($input), wait(filter($input)));
     }
 
     public function testWithCallback() {
@@ -20,7 +20,7 @@ class ParallelFilterTest extends TestCase {
             return $value === false;
         };
 
-        $this->assertSame(\array_filter($input, $callback), wait(parallelFilter($input, $callback)));
+        $this->assertSame(\array_filter($input, $callback), wait(filter($input, $callback)));
     }
 
     public function testWithCallbackAndFlagKey() {
@@ -29,7 +29,7 @@ class ParallelFilterTest extends TestCase {
             return $key === 2;
         };
 
-        $this->assertSame(\array_filter($input, $callback, \ARRAY_FILTER_USE_KEY), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_KEY)));
+        $this->assertSame(\array_filter($input, $callback, \ARRAY_FILTER_USE_KEY), wait(filter($input, $callback, \ARRAY_FILTER_USE_KEY)));
     }
 
     public function testWithCallbackAndFlagBoth() {
@@ -38,13 +38,13 @@ class ParallelFilterTest extends TestCase {
             return $key === 2 || $value === true;
         };
 
-        $this->assertSame(\array_filter($input, $callback, \ARRAY_FILTER_USE_BOTH), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_BOTH)));
+        $this->assertSame(\array_filter($input, $callback, \ARRAY_FILTER_USE_BOTH), wait(filter($input, $callback, \ARRAY_FILTER_USE_BOTH)));
     }
 
     public function testException() {
         $this->expectException(MultiReasonException::class);
 
-        wait(parallelFilter([1, 2, 3], function () {
+        wait(filter([1, 2, 3], function () {
             throw new \Exception;
         }));
     }
@@ -57,7 +57,7 @@ class ParallelFilterTest extends TestCase {
         ];
 
         try {
-            wait(parallelFilter($files, function ($args) {
+            wait(filter($files, function ($args) {
                 list($id, $filename) = $args;
 
                 if ($id === 0) {
