@@ -1,19 +1,14 @@
-<p align="center">
-<h1>Parallel Closures</h1>
-<a href="https://travis-ci.org/amphp/parallel-closure"><img src="https://img.shields.io/travis/amphp/parallel-closure/master.svg?style=flat-square"></a>
-<a href="https://coveralls.io/github/amphp/parallel-closure?branch=master"><img src="https://img.shields.io/coveralls/amphp/parallel-closure/master.svg?style=flat-square"></a>
-<a href="blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square"></a>
-<br>
-<br>
-<b><code>amphp/parallel-closure</code> makes writing parallel code simple.</b>
-</p>
+# parallel-functions
+
+[![Build Status](https://img.shields.io/travis/amphp/parallel-functions/master.svg?style=flat-square)](https://travis-ci.org/amphp/parallel-functions)
+![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)
 
 ## Installation
 
 This package can be installed as a [Composer](https://getcomposer.org/) dependency.
 
 ```bash
-composer require amphp/parallel-closure
+composer require amphp/parallel-functions
 ```
 
 ## Requirements
@@ -26,7 +21,7 @@ Documentation is bundled within this repository in the [`./docs`](./docs) direct
 
 ## Versioning
 
-`amphp/parallel-closure` follows the [semver](http://semver.org/) semantic versioning specification like all other `amphp` packages.
+`amphp/parallel-functions` follows the [semver](http://semver.org/) semantic versioning specification like all other `amphp` packages.
 
 ## Security
 

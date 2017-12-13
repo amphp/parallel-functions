@@ -1,6 +1,6 @@
 {
-    "name": "amphp/parallel-closure",
-    "description": "Simple parallel processing of closures.",
+    "name": "amphp/parallel-functions",
+    "description": "Parallel processing made simple.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,16 +11,15 @@
     ],
     "autoload": {
         "psr-4": {
-            "Amp\\ParallelClosure\\": "src"
+            "Amp\\ParallelFunctions\\": "src"
         },
         "files": [
-            "src/functions.php",
-            "src/Internal/functions.php"
+            "src/functions.php"
         ]
     },
     "require": {
         "php": ">=7",
-        "amphp/parallel": "dev-master as 0.2",
+        "amphp/parallel": "^0.1",
         "amphp/amp": "^2",
         "jeremeamia/SuperClosure": "^2.3"
     },

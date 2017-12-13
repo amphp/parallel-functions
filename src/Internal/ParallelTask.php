@@ -1,6 +1,6 @@
 <?php
 
-namespace Amp\ParallelClosure\Internal;
+namespace Amp\ParallelFunctions\Internal;
 
 use Amp\Parallel\Worker\Environment;
 use Amp\Parallel\Worker\Task;

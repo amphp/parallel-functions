@@ -1,17 +1,17 @@
 <?php
 
-namespace Amp\ParallelClosure\Test;
+namespace Amp\ParallelFunctions\Test;
 
 use Amp\MultiReasonException;
 use Amp\PHPUnit\TestCase;
-use function Amp\ParallelClosure\parallel_filter;
+use function Amp\ParallelFunctions\parallelFilter;
 use function Amp\Promise\wait;
 
 class ParallelFilterTest extends TestCase {
     public function testWithoutCallback() {
         $input = [1, 0, 3, false, true, null];
 
-        $this->assertSame(array_filter($input), wait(parallel_filter($input)));
+        $this->assertSame(array_filter($input), wait(parallelFilter($input)));
     }
 
     public function testWithCallback() {
@@ -20,7 +20,7 @@ class ParallelFilterTest extends TestCase {
             return $value === false;
         };
 
-        $this->assertSame(array_filter($input, $callback), wait(parallel_filter($input, $callback)));
+        $this->assertSame(array_filter($input, $callback), wait(parallelFilter($input, $callback)));
     }
 
     public function testWithCallbackAndFlagKey() {
@@ -29,7 +29,7 @@ class ParallelFilterTest extends TestCase {
             return $key === 2;
         };
 
-        $this->assertSame(array_filter($input, $callback, \ARRAY_FILTER_USE_KEY), wait(parallel_filter($input, $callback, \ARRAY_FILTER_USE_KEY)));
+        $this->assertSame(array_filter($input, $callback, \ARRAY_FILTER_USE_KEY), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_KEY)));
     }
 
     public function testWithCallbackAndFlagBoth() {
@@ -38,26 +38,26 @@ class ParallelFilterTest extends TestCase {
             return $key === 2 || $value === true;
         };
 
-        $this->assertSame(array_filter($input, $callback, \ARRAY_FILTER_USE_BOTH), wait(parallel_filter($input, $callback, \ARRAY_FILTER_USE_BOTH)));
+        $this->assertSame(array_filter($input, $callback, \ARRAY_FILTER_USE_BOTH), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_BOTH)));
     }
 
     public function testException() {
         $this->expectException(MultiReasonException::class);
 
-        wait(parallel_filter([1, 2, 3], function () {
+        wait(parallelFilter([1, 2, 3], function () {
             throw new \Exception;
         }));
     }
 
     public function testExecutesAllTasksOnException() {
         $files = [
-            [0, \tempnam(\sys_get_temp_dir(), 'amp-parallel-closure-')],
-            [1, \tempnam(\sys_get_temp_dir(), 'amp-parallel-closure-')],
-            [2, \tempnam(\sys_get_temp_dir(), 'amp-parallel-closure-')],
+            [0, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [1, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [2, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
         ];
 
         try {
-            wait(parallel_filter($files, function ($args) {
+            wait(parallelFilter($files, function ($args) {
                 list($id, $filename) = $args;
 
                 if ($id === 0) {
