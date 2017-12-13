@@ -53,7 +53,7 @@ function parallelMap(array $array, callable $callable): Promise {
     return call(function () use ($array, $callable) {
         // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
         // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
-        list($errors, $results) = yield any(array_map(parallel($callable), $array));
+        list($errors, $results) = yield any(\array_map(parallel($callable), $array));
 
         if ($errors) {
             throw new MultiReasonException($errors);
@@ -87,11 +87,11 @@ function parallelFilter(array $array, callable $callable = null, int $flag = 0):
         // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
         // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
         if ($flag === \ARRAY_FILTER_USE_BOTH) {
-            list($errors, $results) = yield any(array_map(parallel($callable), $array, \array_keys($array)));
+            list($errors, $results) = yield any(\array_map(parallel($callable), $array, \array_keys($array)));
         } elseif ($flag === \ARRAY_FILTER_USE_KEY) {
-            list($errors, $results) = yield any(array_map(parallel($callable), \array_keys($array)));
+            list($errors, $results) = yield any(\array_map(parallel($callable), \array_keys($array)));
         } else {
-            list($errors, $results) = yield any(array_map(parallel($callable), $array));
+            list($errors, $results) = yield any(\array_map(parallel($callable), $array));
         }
 
         if ($errors) {
