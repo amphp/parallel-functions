@@ -1,0 +1,31 @@
+{
+    "name": "amphp/parallel-closure",
+    "description": "Simple parallel processing of closures.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Niklas Keller",
+            "email": "me@kelunik.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Amp\\ParallelClosure\\": "src"
+        },
+        "files": [
+            "src/functions.php",
+            "src/Internal/functions.php"
+        ]
+    },
+    "require": {
+        "php": ">=7",
+        "amphp/parallel": "dev-master as 0.2",
+        "amphp/amp": "^2",
+        "jeremeamia/SuperClosure": "^2.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5",
+        "amphp/phpunit-util": "^1.0"
+    }
+}
