@@ -74,4 +74,16 @@ class FilterTest extends TestCase {
             $this->assertStringEqualsFile($files[2][1], '2');
         }
     }
+
+    public function testFilterWithInvalidFlag() {
+        $this->expectException(\Error::class);
+
+        $files = [
+            [0, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [1, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [2, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+        ];
+
+        wait(parallelFilter($files, null, ARRAY_FILTER_USE_BOTH));
+    }
 }
