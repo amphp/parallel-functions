@@ -8,12 +8,12 @@ use function Amp\ParallelFunctions\parallel;
 class ParallelTest extends TestCase {
     /**
      * @expectedException \Error
-     * @expectedExceptionMessage Serialization of closure failed
+     * @expectedExceptionMessage Unsupported callable: Serialization of 'class@anonymous' is not allowed
      */
     public function testUnserializableClosure() {
         $unserializable = new class {
         };
-        $callable = parallel(function () use ($unserializable) {
+        parallel(function () use ($unserializable) {
             return 1;
         });
     }

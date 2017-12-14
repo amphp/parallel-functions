@@ -21,7 +21,7 @@
         "php": ">=7",
         "amphp/parallel": "^0.1",
         "amphp/amp": "^2",
-        "jeremeamia/SuperClosure": "^2.3"
+        "opis/closure": "^3.0.7"
     },
     "require-dev": {
         "amphp/phpunit-util": "^1.0",

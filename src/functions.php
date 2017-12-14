@@ -5,7 +5,7 @@ namespace Amp\ParallelFunctions;
 use Amp\MultiReasonException;
 use Amp\ParallelFunctions\Internal\ParallelTask;
 use Amp\Promise;
-use SuperClosure\Serializer;
+use Opis\Closure\SerializableClosure;
 use function Amp\call;
 use function Amp\Parallel\Worker\enqueue;
 use function Amp\Promise\any;
@@ -19,39 +19,20 @@ use function Amp\Promise\any;
  * @throws \Error If the passed callable is not safely serializable.
  */
 function parallel(callable $callable): callable {
-    static $serializer, $errorHandler;
-
-    if ($serializer === null) {
-        $serializer = new Serializer;
+    try {
+        if (\is_string($callable)) {
+            $payload = \serialize($callable);
+        } elseif ($callable instanceof \Closure) {
+            $payload = \serialize(new SerializableClosure($callable));
+        } else {
+            throw new \Error('Unsupported callable type: ' . \gettype($callable));
+        }
+    } catch (\Exception $e) {
+        throw new \Error('Unsupported callable: ' . $e->getMessage());
     }
 
-    if (\is_string($callable)) {
-        $payload = $callable;
-        $type = ParallelTask::TYPE_SIMPLE;
-    } elseif ($callable instanceof \Closure) {
-        if ($errorHandler === null) {
-            $errorHandler = function ($errno, $errstr) {
-                if ($errno & \error_reporting()) {
-                    throw new \Error($errstr);
-                }
-            };
-        }
-
-        // Set custom error handler because Serializer only issues a notice if serialization fails.
-        \set_error_handler($errorHandler);
-
-        try {
-            $payload = $serializer->serialize($callable);
-            $type = ParallelTask::TYPE_CLOSURE;
-        } finally {
-            \restore_error_handler();
-        }
-    } else {
-        throw new \Error('Unsupported callable type: ' . \gettype($callable));
-    }
-
-    return function (...$args) use ($type, $payload): Promise {
-        return enqueue(new ParallelTask($type, $payload, $args));
+    return function (...$args) use ($payload): Promise {
+        return enqueue(new ParallelTask($payload, $args));
     };
 }
 
@@ -62,7 +43,7 @@ function parallel(callable $callable): callable {
  * @param callable $callable
  *
  * @return Promise Resolves to the result once the operation finished.
- * @throws \Error
+ * @throws \Error If the passed callable is not safely serializable.
  */
 function parallelMap(array $array, callable $callable): Promise {
     return call(function () use ($array, $callable) {
@@ -86,6 +67,7 @@ function parallelMap(array $array, callable $callable): Promise {
  * @param int      $flag
  *
  * @return Promise
+ * @throws \Error If the passed callable is not safely serializable.
  */
 function parallelFilter(array $array, callable $callable = null, int $flag = 0): Promise {
     return call(function () use ($array, $callable, $flag) {
