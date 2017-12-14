@@ -33,9 +33,9 @@ All you need is wrapping every function returning an `Amp\Promise` with `Amp\Pro
 <?php
 
 use Amp\Promise;
-use function Amp\ParallelFunctions\map;
+use function Amp\ParallelFunctions\parallelMap;
 
-$values = Promise\wait(map([1, 2, 3], function ($time) {
+$values = Promise\wait(parallelMap([1, 2, 3], function ($time) {
     \sleep($time); // a blocking function call, might also do blocking I/O here
 
     return $time * $time;
@@ -50,16 +50,16 @@ All arguments have to be serializable.
 Currently this function only supports a direct string as function name or instances of `\Closure`.
 Support for other `callable` types might be added in the future.
 
-### `map()`
+### `parallelMap()`
 
-`Amp\ParallelFunctions\map(array, callable): Promise` works similar to `array_map()`, but has a different signature.
+`Amp\ParallelFunctions\parallelMap(array, callable): Promise` works similar to `array_map()`, but has a different signature.
 It accepts only one array instead of being variadic.
-It's thereby consistent with `Amp\ParallelFunctions\filter()`.
+It's thereby consistent with `Amp\ParallelFunctions\parallelFilter()`.
 
 Restrictions of `Amp\ParallelFunctions\parallel()` apply.
 
-### `filter()`
+### `parallelFilter()`
 
-`Amp\ParallelFunctions\filter(array, callable, int): Promise` works like `array_filter()`, but returns a promise and executes in parallel.
+`Amp\ParallelFunctions\parallelFilter(array, callable, int): Promise` works like `array_filter()`, but returns a promise and executes in parallel.
 
 Restrictions of `Amp\ParallelFunctions\parallel()` apply.
