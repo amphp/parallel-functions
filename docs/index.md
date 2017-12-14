@@ -11,7 +11,7 @@ All data sent to / received from the child processes / threads must be serializa
 > If serialization of a particular closure doesn't work, you can always write an autoloadable function and call that by name instead.
 
 {:.note}
-> PHP's resources aren't serializable and will silently be casted to integers on serialization. 
+> PHP's resources aren't serializable and will silently be casted to integers on serialization.
 
 ## Installation
 
@@ -27,7 +27,12 @@ Like all other `amphp` libraries, this library works in a fully asynchronous wor
 It returns promises as placeholders for future results of operations.
 
 You don't need to know any details to use this library in traditional, fully synchronous applications.
-All you need is wrapping every function returning an [`Amp\Promise`](https://amphp.org/amp/promises/) with [`Amp\Promise\wait()`](https://amphp.org/amp/promises/miscellaneous#wait). 
+All you need is wrapping every function returning an [`Amp\Promise`](https://amphp.org/amp/promises/) with [`Amp\Promise\wait()`](https://amphp.org/amp/promises/miscellaneous#wait).
+
+{:.warning}
+> Don't write anything directly (using `fwrite()` / `fputs()`) to `STDOUT` inside functions executed in parallel.
+> This will break the communication channel with the parent.
+> You can use `echo` / `print` / `var_dump` just as normal, these will automatically be redirected to `STDERR` of the parent.
 
 ```php
 <?php
