@@ -11,7 +11,8 @@ class ParallelTest extends TestCase {
      * @expectedExceptionMessage Serialization of closure failed
      */
     public function testUnserializableClosure() {
-        $unserializable = new class {};
+        $unserializable = new class {
+        };
         $callable = parallel(function () use ($unserializable) {
             return 1;
         });
