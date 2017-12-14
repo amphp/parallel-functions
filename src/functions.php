@@ -3,7 +3,6 @@
 namespace Amp\ParallelFunctions;
 
 use Amp\MultiReasonException;
-use Amp\Parallel\Sync\SerializationException;
 use Amp\ParallelFunctions\Internal\ParallelTask;
 use Amp\Promise;
 use SuperClosure\Serializer;
@@ -20,7 +19,7 @@ use function Amp\Promise\any;
  * @throws \Error If the passed callable is not safely serializable.
  */
 function parallel(callable $callable): callable {
-    static $serializer;
+    static $serializer, $errorHandler;
 
     if ($serializer === null) {
         $serializer = new Serializer;
@@ -30,11 +29,22 @@ function parallel(callable $callable): callable {
         $payload = $callable;
         $type = ParallelTask::TYPE_SIMPLE;
     } elseif ($callable instanceof \Closure) {
+        if ($errorHandler === null) {
+            $errorHandler = function ($errno, $errstr) {
+                if ($errno & \error_reporting()) {
+                    throw new \Error($errstr);
+                }
+            };
+        }
+
+        // Set custom error handler because Serializer only issues a notice if serialization fails.
+        \set_error_handler($errorHandler);
+
         try {
             $payload = $serializer->serialize($callable);
             $type = ParallelTask::TYPE_CLOSURE;
-        } catch (SerializationException $e) {
-            throw new \Error('Unserializable closure: ' . $e->getMessage(), 0, $e);
+        } finally {
+            \restore_error_handler();
         }
     } else {
         throw new \Error('Unsupported callable type: ' . \gettype($callable));
