@@ -2,7 +2,7 @@
 title: Introduction
 permalink: /
 ---
-`amphp/parallel-functions` is a simplifying layer on top of `amphp/parallel`.
+`amphp/parallel-functions` is a simplifying layer on top of [`amphp/parallel`](https://github.com/amphp/parallel).
 It allows parallel code execution by leveraging threads or processes, depending on the installed extensions.
 All data sent to / received from the child processes / threads must be serializable using PHP's `serialize()` function.
 
@@ -27,7 +27,7 @@ Like all other `amphp` libraries, this library works in a fully asynchronous wor
 It returns promises as placeholders for future results of operations.
 
 You don't need to know any details to use this library in traditional, fully synchronous applications.
-All you need is wrapping every function returning an `Amp\Promise` with `Amp\Promise\wait()`. 
+All you need is wrapping every function returning an [`Amp\Promise`](https://amphp.org/amp/promises/) with [`Amp\Promise\wait()`](https://amphp.org/amp/promises/miscellaneous#wait). 
 
 ```php
 <?php
@@ -44,22 +44,22 @@ $values = Promise\wait(parallelMap([1, 2, 3], function ($time) {
 
 ### `parallel()`
 
-`Amp\ParallelFunctions\parallel(callable): callable` wraps a `callable`, so it's executed in another thread / process on invocation.
+`Amp\ParallelFunctions\parallel(callable): callable` wraps a [`callable`](https://secure.php.net/callable), so it's executed in another thread / process on invocation.
 All arguments have to be serializable.
 
-Currently this function only supports a direct string as function name or instances of `\Closure`.
-Support for other `callable` types might be added in the future.
+Currently this function only supports a direct string as function name or instances of [`\Closure`](https://secure.php.net/Closure).
+Support for other [`callable`](https://secure.php.net/callable) types might be added in the future.
 
 ### `parallelMap()`
 
-`Amp\ParallelFunctions\parallelMap(array, callable): Promise` works similar to `array_map()`, but has a different signature.
+`Amp\ParallelFunctions\parallelMap(array, callable): Promise` works similar to [`array_map()`](https://secure.php.net/array_map), but has a different signature.
 It accepts only one array instead of being variadic.
-It's thereby consistent with `Amp\ParallelFunctions\parallelFilter()`.
+It's thereby consistent with [`parallelFilter()`](#parallelfilter).
 
-Restrictions of `Amp\ParallelFunctions\parallel()` apply.
+Restrictions of [`Amp\ParallelFunctions\parallel()`](#parallel) apply.
 
 ### `parallelFilter()`
 
-`Amp\ParallelFunctions\parallelFilter(array, callable, int): Promise` works like `array_filter()`, but returns a promise and executes in parallel.
+`Amp\ParallelFunctions\parallelFilter(array, callable, int): Promise` works like [`array_filter()`](https://secure.php.net/array_filter), but returns a promise and executes in parallel.
 
-Restrictions of `Amp\ParallelFunctions\parallel()` apply.
+Restrictions of [`Amp\ParallelFunctions\parallel()`](#parallel) apply.
