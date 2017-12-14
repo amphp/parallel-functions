@@ -20,5 +20,7 @@ defaults:
      type: "pages"
    values:
      layout: "docs"
+     description: "Parallel functions for PHP based on Amp supporting parallel execution of closures."
+     keywords: ["amphp", "amp", "parallel", "thread", "threading", "multi-processing", "multi-threading", "asynchronous", "php"]
 
 shared_asset_path: "/parallel-functions/asset"
