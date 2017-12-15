@@ -28,10 +28,10 @@ script:
   # Run with phpdbg or xdebug as soon as one of both doesn't segfault anymore
   - vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
   - (for f in examples/*.php; do echo $f && if ! php $f; then echo '!! failed !!' && exit 1; fi && echo "-------"; done)
-  - PHP_CS_FIXER_IGNORE_ENV=1 composer fix-syntax
+  - PHP_CS_FIXER_IGNORE_ENV=1 composer fix-syntax -- --dry-run
 
 after_script:
-  -  vendor/bin/coveralls -v
+  - ./coveralls.phar -v
 
 cache:
   directories:

@@ -75,7 +75,7 @@ class FilterTest extends TestCase {
         }
     }
 
-    public function testFilterWithInvalidFlag() {
+    public function testFilterWithNullCallable() {
         $this->expectException(\Error::class);
 
         $files = [

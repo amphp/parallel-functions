@@ -17,6 +17,11 @@
             "src/functions.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Amp\\ParallelFunctions\\Test\\": "test"
+        }
+    },
     "require": {
         "php": ">=7",
         "amphp/parallel": "^0.1",
@@ -26,8 +31,7 @@
     "require-dev": {
         "amphp/phpunit-util": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.9",
-        "phpunit/phpunit": "^6.5",
-        "php-coveralls/php-coveralls": "^1.0"
+        "phpunit/phpunit": "^6.5"
     },
     "config": {
         "platform": {
@@ -35,6 +39,6 @@
         }
     },
     "scripts": {
-        "fix-syntax": "php vendor/bin/php-cs-fixer --diff --dry-run -v fix"
+        "fix-syntax": "php vendor/bin/php-cs-fixer --diff -v fix"
     }
 }
