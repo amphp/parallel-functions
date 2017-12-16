@@ -28,12 +28,12 @@ use function Amp\ParallelFunctions\parallelMap;
 use function Amp\Promise\wait;
 
 $responses = wait(parallelMap([
-	'https://google.com/',
-	'https://github.com/',
-	'https://stackoverflow.com/',
+    'https://google.com/',
+    'https://github.com/',
+    'https://stackoverflow.com/',
 ], function ($url) {
     return file_get_contents($url);
-})));
+}));
 ```
 
 Further examples can be found in the [`./examples`](examples) directory.
