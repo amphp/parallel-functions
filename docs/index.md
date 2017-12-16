@@ -23,7 +23,9 @@ composer require amphp/parallel-functions
 
 ## Configuration
 
-This library doesn't allow any direct configuration. It makes direct use of the default worker pool in `amphp/parallel`, which can be configured using `Amp\Parallel\Worker\pool()` in version 0.2 of `amphp/parallel`. The default maximum number of workers is 32.
+The functions in this library do not require an instance of `Amp\Parallel\Worker\Pool` to be provided.
+When a pool instance is not provided, the default worker pool in `amphp/parallel` is used, which can be configured using `Amp\Parallel\Worker\pool()` in version 0.2 of `amphp/parallel`.
+The default maximum number of workers is 32.
 
 ## Usage
 
@@ -53,15 +55,16 @@ $values = Promise\wait(parallelMap([1, 2, 3], function ($time) {
 
 ### `parallel()`
 
-`Amp\ParallelFunctions\parallel(callable): callable` wraps a [`callable`](https://secure.php.net/callable), so it's executed in another thread / process on invocation.
+`Amp\ParallelFunctions\parallel(callable, Amp\Parallel\Worker\Pool|null): callable` wraps a [`callable`](https://secure.php.net/callable), so it's executed in another thread / process on invocation.
 All arguments have to be serializable.
+The default worker pool (the pool returned by `Amp\Parallel\Worker\pool()`) will be used unless an optional `Amp\Parallel\Worker\Pool` instance is provided.
 
 Currently this function only supports a direct string as function name or instances of [`\Closure`](https://secure.php.net/Closure).
 Support for other [`callable`](https://secure.php.net/callable) types might be added in the future.
 
 ### `parallelMap()`
 
-`Amp\ParallelFunctions\parallelMap(array, callable): Promise` works similar to [`array_map()`](https://secure.php.net/array_map), but has a different signature.
+`Amp\ParallelFunctions\parallelMap(array, callable, Amp\Parallel\Worker\Pool|null): Promise` works similar to [`array_map()`](https://secure.php.net/array_map), but has a different signature.
 It accepts only one array instead of being variadic.
 It's thereby consistent with [`parallelFilter()`](#parallelfilter).
 
@@ -69,6 +72,6 @@ Restrictions of [`Amp\ParallelFunctions\parallel()`](#parallel) apply.
 
 ### `parallelFilter()`
 
-`Amp\ParallelFunctions\parallelFilter(array, callable, int): Promise` works like [`array_filter()`](https://secure.php.net/array_filter), but returns a promise and executes in parallel.
+`Amp\ParallelFunctions\parallelFilter(array, callable, int, Amp\Parallel\Worker\Pool|null): Promise` works like [`array_filter()`](https://secure.php.net/array_filter), but returns a promise and executes in parallel.
 
 Restrictions of [`Amp\ParallelFunctions\parallel()`](#parallel) apply.
