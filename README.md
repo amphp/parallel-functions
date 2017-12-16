@@ -19,6 +19,25 @@ composer require amphp/parallel-functions
 
 Documentation can be found on [amphp.org](https://amphp.org/parallel-functions/) as well as in the [`./docs`](./docs) directory.
 
+## Example
+
+```php
+<?php
+
+use function Amp\ParallelFunctions\parallelMap;
+use function Amp\Promise\wait;
+
+$responses = wait(parallelMap([
+	'https://google.com/',
+	'https://github.com/',
+	'https://stackoverflow.com/',
+], function ($url) {
+    return file_get_contents($url);
+})));
+```
+
+Further examples can be found in the [`./examples`](examples) directory.
+
 ## Versioning
 
 `amphp/parallel-functions` follows the [semver](http://semver.org/) semantic versioning specification like all other `amphp` packages.
