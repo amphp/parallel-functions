@@ -21,6 +21,10 @@ This package can be installed as a [Composer](https://getcomposer.org/) dependen
 composer require amphp/parallel-functions
 ```
 
+## Configuration
+
+This library doesn't allow any direct configuration. It makes direct use of the default worker pool in `amphp/parallel`, which can be configured using `Amp\Parallel\Worker\pool()` in version 0.2 of `amphp/parallel`. The default maximum number of workers is 32.
+
 ## Usage
 
 Like all other `amphp` libraries, this library works in a fully asynchronous world.
