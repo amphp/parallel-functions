@@ -17,6 +17,11 @@
             "src/functions.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Amp\\ParallelFunctions\\Test\\": "test"
+        }
+    },
     "require": {
         "php": ">=7",
         "amphp/parallel": "^0.1.8 || ^0.2",
@@ -32,5 +37,8 @@
         "platform": {
             "php": "7.0.0"
         }
+    },
+    "scripts": {
+        "fix-syntax": "php vendor/bin/php-cs-fixer --diff -v fix"
     }
 }
