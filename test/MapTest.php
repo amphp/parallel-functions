@@ -16,7 +16,7 @@ class MapTest extends TestCase {
 
     public function testCorrectOutputOrder() {
         $this->assertSame([0, 1, 0], wait(parallelMap([0, 1, 0], function ($input) {
-            sleep($input);
+            \sleep($input);
 
             return $input;
         })));
