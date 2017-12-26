@@ -23,9 +23,10 @@ composer require amphp/parallel-functions
 
 ## Configuration
 
-The functions in this library do not require an instance of `Amp\Parallel\Worker\Pool` to be provided.
-When a pool instance is not provided, the default worker pool in `amphp/parallel` is used, which can be configured using `Amp\Parallel\Worker\pool()` in version 0.2 of `amphp/parallel`.
-The default maximum number of workers is 32.
+This library uses the default process pool of `amphp/parallel` by default.
+You usually don't have to pass a custom `Amp\Parallel\Worker\Pool` instance to the functions provided.
+If you need a different configuration other than the default, it's usually best to re-configure the default worker pool in `amphp/parallel` instead of passing a custom instance, which can be configured using `Amp\Parallel\Worker\pool()`.
+The default maximum number of workers is 32, which you probably want to lower in a traditional web environment, but which is fine for most other usages, such as background scripts running via the CLI version of PHP.
 
 ## Usage
 
