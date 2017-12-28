@@ -13,7 +13,7 @@ use function Amp\Promise\wait;
 for ($i = 0; $i < 30; $i++) {
     $pool = new DefaultPool();
 
-    $promises = parallelMap(range(1, 50), function () {
+    $promises = parallelMap(\range(1, 50), function () {
         return 2;
     }, $pool);
 
