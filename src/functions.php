@@ -21,6 +21,10 @@ use function Amp\Promise\any;
  * @throws \Error If the passed callable is not safely serializable.
  */
 function parallel(callable $callable, Pool $pool = null): callable {
+    if (\defined("AMP_PARALLEL_DEBUG") && false === \AMP_PARALLEL_DEBUG) {
+        return $callable;
+    }
+
     try {
         if (\is_string($callable)) {
             $payload = \serialize($callable);
@@ -51,15 +55,9 @@ function parallel(callable $callable, Pool $pool = null): callable {
  */
 function parallelMap(array $array, callable $callable, Pool $pool = null): Promise {
     return call(function () use ($array, $callable, $pool) {
-        $env = \getenv("AMP_DEBUG");
-
-        if ((false === $env || $env === "0" && $env === "false") || (\defined("AMP_DEBUG") && false === \AMP_DEBUG)) {
-            // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
-            // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
-            list($errors, $results) = yield any(\array_map(parallel($callable, $pool), $array));
-        } else {
-            list($errors, $results) = yield any(\array_map($callable, $array));
-        }
+        // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
+        // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
+        list($errors, $results) = yield any(\array_map(parallel($callable, $pool), $array));
 
         if ($errors) {
             throw new MultiReasonException($errors);
