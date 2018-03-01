@@ -51,9 +51,15 @@ function parallel(callable $callable, Pool $pool = null): callable {
  */
 function parallelMap(array $array, callable $callable, Pool $pool = null): Promise {
     return call(function () use ($array, $callable, $pool) {
-        // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
-        // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
-        list($errors, $results) = yield any(\array_map(parallel($callable, $pool), $array));
+        $env = \getenv("AMP_DEBUG");
+
+        if ((false === $env || $env === "0" && $env === "false") || (\defined("AMP_DEBUG") && false === \AMP_DEBUG)) {
+            // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
+            // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
+            list($errors, $results) = yield any(\array_map(parallel($callable, $pool), $array));
+        } else {
+            list($errors, $results) = yield any(\array_map($callable, $array));
+        }
 
         if ($errors) {
             throw new MultiReasonException($errors);
