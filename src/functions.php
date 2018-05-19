@@ -21,6 +21,10 @@ use function Amp\Promise\any;
  * @throws \Error If the passed callable is not safely serializable.
  */
 function parallel(callable $callable, Pool $pool = null): callable {
+    if (\defined("AMP_PARALLEL_DEBUG") && false === \AMP_PARALLEL_DEBUG) {
+        return $callable;
+    }
+
     try {
         if (\is_string($callable)) {
             $payload = \serialize($callable);
