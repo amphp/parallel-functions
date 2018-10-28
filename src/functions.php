@@ -4,7 +4,6 @@ namespace Amp\ParallelFunctions;
 
 use Amp\MultiReasonException;
 use Amp\Parallel\Worker\Pool;
-use Amp\ParallelFunctions\Internal\ParallelTask;
 use Amp\Promise;
 use Opis\Closure\SerializableClosure;
 use function Amp\call;
@@ -22,19 +21,17 @@ use function Amp\Promise\any;
  */
 function parallel(callable $callable, Pool $pool = null): callable {
     try {
-        if (\is_string($callable)) {
-            $payload = \serialize($callable);
-        } elseif ($callable instanceof \Closure) {
-            $payload = \serialize(new SerializableClosure($callable));
-        } else {
-            throw new \Error('Unsupported callable type: ' . \gettype($callable));
+        if ($callable instanceof \Closure) {
+            $callable = new SerializableClosure($callable);
         }
+
+        $payload = \serialize($callable);
     } catch (\Exception $e) {
-        throw new \Error('Unsupported callable: ' . $e->getMessage());
+        throw new \Error('Unsupported callable: ' . $e->getMessage(), 0, $e);
     }
 
     return function (...$args) use ($pool, $payload): Promise {
-        $task = new ParallelTask($payload, $args);
+        $task = new Internal\ParallelTask($payload, $args);
         return $pool ? $pool->enqueue($task) : enqueue($task);
     };
 }

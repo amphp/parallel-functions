@@ -25,6 +25,14 @@ class ParallelTask implements Task {
     public function run(Environment $environment) {
         $callable = \unserialize($this->function, ['allowed_classes' => true]);
 
+        if ($callable instanceof \__PHP_Incomplete_Class) {
+            throw new \Error('When using a class instance as a callable, the class must be autoloadable');
+        }
+
+        if (\is_array($callable) && $callable[0] instanceof \__PHP_Incomplete_Class) {
+            throw new \Error('When using a class instance method as a callable, the class must be autoloadable');
+        }
+
         return $callable(...$this->args);
     }
 }
