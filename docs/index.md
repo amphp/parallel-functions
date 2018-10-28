@@ -37,9 +37,7 @@ You don't need to know any details to use this library in traditional, fully syn
 All you need is wrapping every function returning an [`Amp\Promise`](https://amphp.org/amp/promises/) with [`Amp\Promise\wait()`](https://amphp.org/amp/promises/miscellaneous#wait).
 
 {:.warning}
-> Don't write anything directly (using `fwrite()` / `fputs()`) to `STDOUT` inside functions executed in parallel.
-> This will break the communication channel with the parent.
-> You can use `echo` / `print` / `var_dump` just as normal, these will automatically be redirected to `STDERR` of the parent.
+> Writing to `STDOUT` using `echo`, `print`, `var_dump`, etc. inside functions executed in parallel is not recommended for producing script output, only for debugging purposes. Output may be interleaved and ordering is not necessarily predictable.
 
 ```php
 <?php
@@ -60,8 +58,7 @@ $values = Promise\wait(parallelMap([1, 2, 3], function ($time) {
 All arguments have to be serializable.
 The default worker pool (the pool returned by `Amp\Parallel\Worker\pool()`) will be used unless an optional `Amp\Parallel\Worker\Pool` instance is provided.
 
-Currently this function only supports a direct string as function name or instances of [`\Closure`](https://secure.php.net/Closure).
-Support for other [`callable`](https://secure.php.net/callable) types might be added in the future.
+Any callable can be used with this function, including instances of [`\Closure`](https://secure.php.net/Closure) or class instance methods. Classes used in a callable must be autoloadable using the [Composer autoloader](https://getcomposer.org/doc/01-basic-usage.md#autoloading).
 
 ### `parallelMap()`
 
