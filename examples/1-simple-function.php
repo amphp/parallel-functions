@@ -13,4 +13,4 @@ $start = \microtime(true);
 // in a traditional synchronous environment.
 wait(parallelMap([1, 2, 3], 'sleep'));
 
-print 'Took ' . (\microtime(true) - $start) . ' milliseconds.' . \PHP_EOL;
+print 'Took ' . (\microtime(true) - $start) . ' seconds.' . \PHP_EOL;
