@@ -24,7 +24,7 @@
     },
     "require": {
         "php": ">=7",
-        "amphp/parallel": "^0.1.8 || ^0.2",
+        "amphp/parallel": "^0.1.8 || ^0.2 || ^1",
         "amphp/amp": "^2.0.3",
         "opis/closure": "^3.0.7"
     },
