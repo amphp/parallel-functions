@@ -2,6 +2,7 @@
 
 namespace Amp\ParallelFunctions\Test;
 
+use Amp\Parallel\Sync\SerializationException;
 use Amp\Parallel\Worker\Pool;
 use Amp\ParallelFunctions\Test\Fixture\TestCallables;
 use Amp\PHPUnit\TestCase;
@@ -21,16 +22,15 @@ class UnserializableClass {
 }
 
 class ParallelTest extends TestCase {
-    /**
-     * @expectedException \Error
-     * @expectedExceptionMessage Unsupported callable: Serialization of 'class@anonymous' is not allowed
-     */
     public function testUnserializableClosure() {
+        $this->expectException(SerializationException::class);
+        $this->expectExceptionMessage('The given data cannot be sent because it is not serializable');
+
         $unserializable = new class {
         };
-        parallel(function () use ($unserializable) {
+        Promise\wait(parallel(function () use ($unserializable) {
             return 1;
-        });
+        })());
     }
 
     public function testCustomPool() {
@@ -73,15 +73,15 @@ class ParallelTest extends TestCase {
     }
 
     public function testUnserializableCallable() {
-        $this->expectException(\Error::class);
-        $this->expectExceptionMessage("Unsupported callable: Serialization of 'class@anonymous' is not allowed");
+        $this->expectException(SerializationException::class);
+        $this->expectExceptionMessage("The given data cannot be sent because it is not serializable");
 
         $callable = new class {
             public function __invoke() {
             }
         };
 
-        $callable = parallel($callable);
+        Promise\wait(parallel($callable)());
     }
 
     public function testUnserializableClassInstance() {
