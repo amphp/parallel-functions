@@ -3,7 +3,7 @@
 namespace Amp\ParallelFunctions;
 
 use Amp\MultiReasonException;
-use Amp\Parallel\Worker\CallableTask;
+use Amp\Parallel\Sync\SerializationException;
 use Amp\Parallel\Worker\Pool;
 use Amp\Promise;
 use Opis\Closure\SerializableClosure;
@@ -18,15 +18,21 @@ use function Amp\Promise\any;
  * @param Pool|null $pool Worker pool instance to use or null to use the global pool.
  *
  * @return callable Callable executing in another thread / process.
- * @throws \Error If the passed callable is not safely serializable.
+ * @throws SerializationException If the passed callable is not safely serializable.
  */
 function parallel(callable $callable, Pool $pool = null): callable {
     if ($callable instanceof \Closure) {
         $callable = new SerializableClosure($callable);
     }
 
+    try {
+        $callable = \serialize($callable);
+    } catch (\Throwable $e) {
+        throw new SerializationException("Unsupported callable: " . $e->getMessage(), 0, $e);
+    }
+
     return function (...$args) use ($pool, $callable): Promise {
-        $task = new CallableTask($callable, $args);
+        $task = new Internal\SerializedCallableTask($callable, $args);
         return $pool ? $pool->enqueue($task) : enqueue($task);
     };
 }

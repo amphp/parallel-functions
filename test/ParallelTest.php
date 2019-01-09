@@ -24,7 +24,7 @@ class UnserializableClass {
 class ParallelTest extends TestCase {
     public function testUnserializableClosure() {
         $this->expectException(SerializationException::class);
-        $this->expectExceptionMessage('The given data cannot be sent because it is not serializable');
+        $this->expectExceptionMessage("Unsupported callable: Serialization of 'class@anonymous' is not allowed");
 
         $unserializable = new class {
         };
@@ -74,7 +74,7 @@ class ParallelTest extends TestCase {
 
     public function testUnserializableCallable() {
         $this->expectException(SerializationException::class);
-        $this->expectExceptionMessage("The given data cannot be sent because it is not serializable");
+        $this->expectExceptionMessage("Unsupported callable: Serialization of 'class@anonymous' is not allowed");
 
         $callable = new class {
             public function __invoke() {
