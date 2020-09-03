@@ -12,3 +12,4 @@ CHANGELOG.md export-ignore
 .php_cs.dist export-ignore
 .gitmodules export-ignore
 .editorconfig export-ignore
+docs/asset export-ignore
