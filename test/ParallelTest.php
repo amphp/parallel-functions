@@ -108,7 +108,11 @@ class ParallelTest extends AsyncTestCase {
 
     public function testUnserializableClassStaticMethod() {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage('Uncaught Error in worker with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found"');
+        $this->expectExceptionMessage(
+            PHP_VERSION_ID >= 80000 ?
+                'Uncaught Error in worker with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found"' :
+                'Uncaught Error in worker with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found"'
+        );
 
         $callable = [UnserializableClass::class, 'staticMethod'];
 
