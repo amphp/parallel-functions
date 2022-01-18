@@ -9,7 +9,7 @@ phpunit.xml.dist export-ignore
 README.md export-ignore
 CONTRIBUTING.md export-ignore
 CHANGELOG.md export-ignore
-.php_cs.dist export-ignore
+.php-cs-fixer.dist.php export-ignore
 .gitmodules export-ignore
 .editorconfig export-ignore
 docs/asset export-ignore

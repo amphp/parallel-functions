@@ -30,7 +30,7 @@
     },
     "require-dev": {
         "amphp/phpunit-util": "^2.0",
-        "friendsofphp/php-cs-fixer": "^2.9",
+        "friendsofphp/php-cs-fixer": "^3.5",
         "phpunit/phpunit": "^9.5.11"
     },
     "config": {

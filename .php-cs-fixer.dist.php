@@ -1,6 +1,6 @@
 <?php
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
         "@PSR1" => true,
@@ -14,7 +14,7 @@ return PhpCsFixer\Config::create()
         "combine_consecutive_unsets" => true,
         "function_to_constant" => true,
         "native_function_invocation" => true,
-        "no_multiline_whitespace_before_semicolons" => true,
+        "multiline_whitespace_before_semicolons" => true,
         "no_unused_imports" => true,
         "no_useless_else" => true,
         "no_useless_return" => true,
@@ -28,7 +28,7 @@ return PhpCsFixer\Config::create()
         "php_unit_fqcn_annotation" => true,
         "phpdoc_summary" => true,
         "phpdoc_types" => true,
-        "psr4" => true,
+        "psr_autoloading" => true,
         "return_type_declaration" => ["space_before" => "none"],
         "short_scalar_cast" => true,
         "single_blank_line_before_namespace" => true,
