@@ -4,11 +4,11 @@ namespace Amp\ParallelFunctions\Test;
 
 use Amp\Parallel\Sync\SerializationException;
 use Amp\Parallel\Worker\Pool;
+use function Amp\ParallelFunctions\parallel;
 use Amp\ParallelFunctions\Test\Fixture\TestCallables;
-use Amp\PHPUnit\TestCase;
+use Amp\PHPUnit\AsyncTestCase;
 use Amp\Promise;
 use Amp\Success;
-use function Amp\ParallelFunctions\parallel;
 
 class UnserializableClass {
     public function __invoke() {
@@ -21,7 +21,7 @@ class UnserializableClass {
     }
 }
 
-class ParallelTest extends TestCase {
+class ParallelTest extends AsyncTestCase {
     public function testUnserializableClosure() {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage("Unsupported callable: Serialization of 'class@anonymous' is not allowed");
