@@ -11,7 +11,7 @@ class FilterTest extends AsyncTestCase {
     public function testWithoutCallback() {
         $input = [1, 0, 3, false, true, null];
 
-        $this->assertSame(\array_filter($input), wait(parallelFilter($input)));
+        $this->assertSame(array_filter($input), wait(parallelFilter($input)));
     }
 
     public function testWithCallback() {
@@ -20,7 +20,7 @@ class FilterTest extends AsyncTestCase {
             return $value === false;
         };
 
-        $this->assertSame(\array_filter($input, $callback), wait(parallelFilter($input, $callback)));
+        $this->assertSame(array_filter($input, $callback), wait(parallelFilter($input, $callback)));
     }
 
     public function testWithCallbackAndFlagKey() {
@@ -29,7 +29,7 @@ class FilterTest extends AsyncTestCase {
             return $key === 2;
         };
 
-        $this->assertSame(\array_filter($input, $callback, \ARRAY_FILTER_USE_KEY), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_KEY)));
+        $this->assertSame(array_filter($input, $callback, \ARRAY_FILTER_USE_KEY), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_KEY)));
     }
 
     public function testWithCallbackAndFlagBoth() {
@@ -38,7 +38,7 @@ class FilterTest extends AsyncTestCase {
             return $key === 2 || $value === true;
         };
 
-        $this->assertSame(\array_filter($input, $callback, \ARRAY_FILTER_USE_BOTH), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_BOTH)));
+        $this->assertSame(array_filter($input, $callback, \ARRAY_FILTER_USE_BOTH), wait(parallelFilter($input, $callback, \ARRAY_FILTER_USE_BOTH)));
     }
 
     public function testException() {
@@ -51,9 +51,9 @@ class FilterTest extends AsyncTestCase {
 
     public function testExecutesAllTasksOnException() {
         $files = [
-            [0, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
-            [1, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
-            [2, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [0, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [1, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [2, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
         ];
 
         try {
@@ -64,8 +64,8 @@ class FilterTest extends AsyncTestCase {
                     throw new \Exception;
                 }
 
-                \sleep(1);
-                \file_put_contents($filename, $id);
+                sleep(1);
+                file_put_contents($filename, $id);
             }));
 
             $this->fail('No exception thrown.');
@@ -79,9 +79,9 @@ class FilterTest extends AsyncTestCase {
         $this->expectException(\Error::class);
 
         $files = [
-            [0, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
-            [1, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
-            [2, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [0, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [1, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [2, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
         ];
 
         wait(parallelFilter($files, null, ARRAY_FILTER_USE_BOTH));

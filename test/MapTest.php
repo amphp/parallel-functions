@@ -16,7 +16,7 @@ class MapTest extends AsyncTestCase {
 
     public function testCorrectOutputOrder() {
         $this->assertSame([0, 1, 0], wait(parallelMap([0, 1, 0], function ($input) {
-            \sleep($input);
+            sleep($input);
 
             return $input;
         })));
@@ -32,9 +32,9 @@ class MapTest extends AsyncTestCase {
 
     public function testExecutesAllTasksOnException() {
         $files = [
-            [0, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
-            [1, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
-            [2, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [0, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [1, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
+            [2, tempnam(sys_get_temp_dir(), 'amp-parallel-functions-')],
         ];
 
         try {
@@ -45,8 +45,8 @@ class MapTest extends AsyncTestCase {
                     throw new \Exception;
                 }
 
-                \sleep(1);
-                \file_put_contents($filename, $id);
+                sleep(1);
+                file_put_contents($filename, $id);
             }));
 
             $this->fail('No exception thrown.');
