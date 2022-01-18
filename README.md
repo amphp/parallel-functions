@@ -13,7 +13,7 @@ composer require amphp/parallel-functions
 
 ## Requirements
 
-- PHP 7.0+
+- PHP 7.4+
 
 ## Documentation
 

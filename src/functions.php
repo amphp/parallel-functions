@@ -6,7 +6,7 @@ use Amp\MultiReasonException;
 use Amp\Parallel\Sync\SerializationException;
 use Amp\Parallel\Worker\Pool;
 use Amp\Promise;
-use Opis\Closure\SerializableClosure;
+use Laravel\SerializableClosure\SerializableClosure;
 use function Amp\call;
 use function Amp\Parallel\Worker\enqueue;
 use function Amp\Promise\any;

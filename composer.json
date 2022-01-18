@@ -26,7 +26,7 @@
         "php": ">=7.4",
         "amphp/parallel": "^1.1",
         "amphp/amp": "^2.0.3",
-        "opis/closure": "^3.0.7"
+        "laravel/serializable-closure": "^1.0"
     },
     "require-dev": {
         "amphp/php-cs-fixer-config": "v2.x-dev",
