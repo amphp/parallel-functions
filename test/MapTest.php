@@ -3,11 +3,11 @@
 namespace Amp\ParallelFunctions\Test;
 
 use Amp\MultiReasonException;
-use Amp\PHPUnit\TestCase;
 use function Amp\ParallelFunctions\parallelMap;
+use Amp\PHPUnit\AsyncTestCase;
 use function Amp\Promise\wait;
 
-class MapTest extends TestCase {
+class MapTest extends AsyncTestCase {
     public function testValidInput() {
         $this->assertSame([3, 4, 5], wait(parallelMap([1, 2, 3], function ($input) {
             return $input + 2;

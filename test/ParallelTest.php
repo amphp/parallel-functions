@@ -4,11 +4,11 @@ namespace Amp\ParallelFunctions\Test;
 
 use Amp\Parallel\Sync\SerializationException;
 use Amp\Parallel\Worker\Pool;
+use function Amp\ParallelFunctions\parallel;
 use Amp\ParallelFunctions\Test\Fixture\TestCallables;
-use Amp\PHPUnit\TestCase;
+use Amp\PHPUnit\AsyncTestCase;
 use Amp\Promise;
 use Amp\Success;
-use function Amp\ParallelFunctions\parallel;
 
 class UnserializableClass {
     public function __invoke() {
@@ -21,7 +21,7 @@ class UnserializableClass {
     }
 }
 
-class ParallelTest extends TestCase {
+class ParallelTest extends AsyncTestCase {
     public function testUnserializableClosure() {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage("Unsupported callable: Serialization of 'class@anonymous' is not allowed");
@@ -108,7 +108,11 @@ class ParallelTest extends TestCase {
 
     public function testUnserializableClassStaticMethod() {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage('Uncaught Error in worker with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found"');
+        $this->expectExceptionMessage(
+            PHP_VERSION_ID >= 80000 ?
+                'Uncaught Error in worker with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found"' :
+                'Uncaught Error in worker with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found"'
+        );
 
         $callable = [UnserializableClass::class, 'staticMethod'];
 

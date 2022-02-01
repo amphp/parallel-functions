@@ -29,9 +29,9 @@
         "opis/closure": "^3.0.7"
     },
     "require-dev": {
-        "amphp/phpunit-util": "^1.0",
+        "amphp/phpunit-util": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.9",
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^9.5.11"
     },
     "config": {
         "platform": {

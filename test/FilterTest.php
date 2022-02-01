@@ -3,11 +3,11 @@
 namespace Amp\ParallelFunctions\Test;
 
 use Amp\MultiReasonException;
-use Amp\PHPUnit\TestCase;
 use function Amp\ParallelFunctions\parallelFilter;
+use Amp\PHPUnit\AsyncTestCase;
 use function Amp\Promise\wait;
 
-class FilterTest extends TestCase {
+class FilterTest extends AsyncTestCase {
     public function testWithoutCallback() {
         $input = [1, 0, 3, false, true, null];
 
