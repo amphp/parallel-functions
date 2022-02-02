@@ -4,25 +4,31 @@ namespace Amp\ParallelFunctions\Test;
 
 use Amp\Parallel\Sync\SerializationException;
 use Amp\Parallel\Worker\Pool;
-use function Amp\ParallelFunctions\parallel;
 use Amp\ParallelFunctions\Test\Fixture\TestCallables;
 use Amp\PHPUnit\AsyncTestCase;
 use Amp\Promise;
 use Amp\Success;
+use function Amp\ParallelFunctions\parallel;
 
-class UnserializableClass {
-    public function __invoke() {
+class UnserializableClass
+{
+    public function __invoke()
+    {
     }
 
-    public function instanceMethod() {
+    public function instanceMethod()
+    {
     }
 
-    public static function staticMethod() {
+    public static function staticMethod()
+    {
     }
 }
 
-class ParallelTest extends AsyncTestCase {
-    public function testUnserializableClosure() {
+class ParallelTest extends AsyncTestCase
+{
+    public function testUnserializableClosure()
+    {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage("Unsupported callable: Serialization of 'class@anonymous' is not allowed");
 
@@ -33,7 +39,8 @@ class ParallelTest extends AsyncTestCase {
         })());
     }
 
-    public function testCustomPool() {
+    public function testCustomPool()
+    {
         $mock = $this->createMock(Pool::class);
         $mock->expects($this->once())
             ->method("enqueue")
@@ -46,7 +53,8 @@ class ParallelTest extends AsyncTestCase {
         $this->assertSame(1, Promise\wait($callable()));
     }
 
-    public function testClassStaticMethod() {
+    public function testClassStaticMethod()
+    {
         $callable = [TestCallables::class, 'staticMethod'];
         $result = $callable(1);
         $callable = parallel($callable);
@@ -54,7 +62,8 @@ class ParallelTest extends AsyncTestCase {
         $this->assertSame($result, Promise\wait($callable(1)));
     }
 
-    public function testClassInstanceMethod() {
+    public function testClassInstanceMethod()
+    {
         $instance = new TestCallables;
 
         $callable = [$instance, 'instanceMethod'];
@@ -64,7 +73,8 @@ class ParallelTest extends AsyncTestCase {
         $this->assertSame($result, Promise\wait($callable(1)));
     }
 
-    public function testCallableClass() {
+    public function testCallableClass()
+    {
         $callable = new TestCallables;
         $result = $callable(1);
         $callable = parallel($callable);
@@ -72,19 +82,22 @@ class ParallelTest extends AsyncTestCase {
         $this->assertSame($result, Promise\wait($callable(1)));
     }
 
-    public function testUnserializableCallable() {
+    public function testUnserializableCallable()
+    {
         $this->expectException(SerializationException::class);
         $this->expectExceptionMessage("Unsupported callable: Serialization of 'class@anonymous' is not allowed");
 
         $callable = new class {
-            public function __invoke() {
+            public function __invoke()
+            {
             }
         };
 
         Promise\wait(parallel($callable)());
     }
 
-    public function testUnserializableClassInstance() {
+    public function testUnserializableClassInstance()
+    {
         $this->expectException(\Error::class);
         $this->expectExceptionMessage('Uncaught Error in worker with message "When using a class instance as a callable, the class must be autoloadable"');
 
@@ -95,7 +108,8 @@ class ParallelTest extends AsyncTestCase {
         Promise\wait($callable());
     }
 
-    public function testUnserializableClassInstanceMethod() {
+    public function testUnserializableClassInstanceMethod()
+    {
         $this->expectException(\Error::class);
         $this->expectExceptionMessage('Uncaught Error in worker with message "When using a class instance method as a callable, the class must be autoloadable"');
 
@@ -106,7 +120,8 @@ class ParallelTest extends AsyncTestCase {
         Promise\wait($callable());
     }
 
-    public function testUnserializableClassStaticMethod() {
+    public function testUnserializableClassStaticMethod()
+    {
         $this->expectException(\Error::class);
         $this->expectExceptionMessage(
             PHP_VERSION_ID >= 80000 ?

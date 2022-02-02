@@ -3,18 +3,21 @@
 namespace Amp\ParallelFunctions\Test;
 
 use Amp\MultiReasonException;
-use function Amp\ParallelFunctions\parallelMap;
 use Amp\PHPUnit\AsyncTestCase;
+use function Amp\ParallelFunctions\parallelMap;
 use function Amp\Promise\wait;
 
-class MapTest extends AsyncTestCase {
-    public function testValidInput() {
+class MapTest extends AsyncTestCase
+{
+    public function testValidInput()
+    {
         $this->assertSame([3, 4, 5], wait(parallelMap([1, 2, 3], function ($input) {
             return $input + 2;
         })));
     }
 
-    public function testCorrectOutputOrder() {
+    public function testCorrectOutputOrder()
+    {
         $this->assertSame([0, 1, 0], wait(parallelMap([0, 1, 0], function ($input) {
             \sleep($input);
 
@@ -22,7 +25,8 @@ class MapTest extends AsyncTestCase {
         })));
     }
 
-    public function testException() {
+    public function testException()
+    {
         $this->expectException(MultiReasonException::class);
 
         wait(parallelMap([1, 2, 3], function () {
@@ -30,7 +34,8 @@ class MapTest extends AsyncTestCase {
         }));
     }
 
-    public function testExecutesAllTasksOnException() {
+    public function testExecutesAllTasksOnException()
+    {
         $files = [
             [0, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
             [1, \tempnam(\sys_get_temp_dir(), 'amp-parallel-functions-')],
