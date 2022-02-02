@@ -1,4 +1,4 @@
 /vendor/
 /composer.lock
-/.php-cs-fixer.cache
+/.php_cs.cache
 /docs/Gemfile.lock
