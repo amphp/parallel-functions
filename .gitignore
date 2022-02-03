@@ -2,3 +2,4 @@
 /composer.lock
 /.php_cs.cache
 /docs/Gemfile.lock
+/composer-require-checker.phar

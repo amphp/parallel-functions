@@ -3,9 +3,9 @@
 namespace Amp\ParallelFunctions;
 
 use Amp\MultiReasonException;
-use Amp\Parallel\Sync\SerializationException;
 use Amp\Parallel\Worker\Pool;
 use Amp\Promise;
+use Amp\Serialization\SerializationException;
 use Laravel\SerializableClosure\SerializableClosure;
 use function Amp\call;
 use function Amp\Parallel\Worker\enqueue;
@@ -53,7 +53,7 @@ function parallelMap(array $array, callable $callable, Pool $pool = null): Promi
     return call(function () use ($array, $callable, $pool) {
         // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
         // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
-        list($errors, $results) = yield any(\array_map(parallel($callable, $pool), $array));
+        [$errors, $results] = yield any(\array_map(parallel($callable, $pool), $array));
 
         if ($errors) {
             throw new MultiReasonException($errors);
@@ -90,11 +90,11 @@ function parallelFilter(array $array, callable $callable = null, int $flag = 0, 
         // Amp\Promise\any() guarantees that all operations finished prior to resolving. Amp\Promise\all() doesn't.
         // Additionally, we return all errors as a MultiReasonException instead of throwing on the first error.
         if ($flag === \ARRAY_FILTER_USE_BOTH) {
-            list($errors, $results) = yield any(\array_map(parallel($callable, $pool), $array, \array_keys($array)));
+            [$errors, $results] = yield any(\array_map(parallel($callable, $pool), $array, \array_keys($array)));
         } elseif ($flag === \ARRAY_FILTER_USE_KEY) {
-            list($errors, $results) = yield any(\array_map(parallel($callable, $pool), \array_keys($array)));
+            [$errors, $results] = yield any(\array_map(parallel($callable, $pool), \array_keys($array)));
         } else {
-            list($errors, $results) = yield any(\array_map(parallel($callable, $pool), $array));
+            [$errors, $results] = yield any(\array_map(parallel($callable, $pool), $array));
         }
 
         if ($errors) {

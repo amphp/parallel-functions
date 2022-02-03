@@ -16,9 +16,7 @@
         "mixed",
         "void",
         "object",
-        "escapeArguments",
-        "IS_WINDOWS",
-        "posix_kill"
+        "parallel"
     ],
     "php-core-extensions": [
         "Core",

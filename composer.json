@@ -24,8 +24,9 @@
     },
     "require": {
         "php": ">=7.4",
-        "amphp/parallel": "^1.1",
         "amphp/amp": "^2.0.3",
+        "amphp/parallel": "^1.4",
+        "amphp/serialization": "^1.0",
         "laravel/serializable-closure": "^1.0"
     },
     "require-dev": {
