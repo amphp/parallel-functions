@@ -75,6 +75,7 @@ jobs:
 
       - name: Run examples
         run: (for f in examples/*.php; do echo $f && if ! php $f; then echo '!! failed !!' && exit 1; fi && echo "-------"; done)
+        if: runner.os != 'Windows'
 
       - name: Run style fixer
         env:
