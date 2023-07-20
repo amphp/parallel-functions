@@ -23,23 +23,25 @@
         }
     },
     "require": {
-        "php": ">=7.4",
-        "amphp/amp": "^2.0.3",
-        "amphp/parallel": "^1.4",
-        "amphp/serialization": "^1.0",
-        "laravel/serializable-closure": "^1.0"
+        "php": ">=8.1",
+        "amphp/amp": "^3",
+        "amphp/parallel": "^2",
+        "amphp/serialization": "^1",
+        "laravel/serializable-closure": "^1.0",
+        "psalm/phar": "^5.13"
     },
     "require-dev": {
         "amphp/php-cs-fixer-config": "v2.x-dev",
-        "amphp/phpunit-util": "^2.0",
+        "amphp/phpunit-util": "^3",
         "phpunit/phpunit": "^9.5.11"
     },
-    "config": {
-        "platform": {
-            "php": "7.4"
-        }
-    },
     "scripts": {
-        "fix-syntax": "php vendor/bin/php-cs-fixer --diff -v fix"
+        "check": [
+            "@cs",
+            "@test"
+        ],
+        "cs": "php-cs-fixer fix -v --diff --dry-run",
+        "cs-fix": "php-cs-fixer fix -v --diff",
+        "test": "@php -dzend.assertions=1 -dassert.exception=1 ./vendor/bin/phpunit --coverage-text"
     }
 }

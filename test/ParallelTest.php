@@ -1,13 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Amp\ParallelFunctions\Test;
 
-use Amp\Parallel\Sync\SerializationException;
-use Amp\Parallel\Worker\Pool;
+use Amp\Parallel\Worker\WorkerPool;
 use Amp\ParallelFunctions\Test\Fixture\TestCallables;
 use Amp\PHPUnit\AsyncTestCase;
-use Amp\Promise;
-use Amp\Success;
+use Amp\Serialization\SerializationException;
 use function Amp\ParallelFunctions\parallel;
 
 class UnserializableClass
@@ -34,23 +32,23 @@ class ParallelTest extends AsyncTestCase
 
         $unserializable = new class {
         };
-        Promise\wait(parallel(function () use ($unserializable) {
+        parallel(function () use ($unserializable) {
             return 1;
-        })());
+        })();
     }
 
     public function testCustomPool()
     {
-        $mock = $this->createMock(Pool::class);
+        $mock = $this->createMock(WorkerPool::class);
         $mock->expects($this->once())
-            ->method("enqueue")
+            ->method("submit")
             ->willReturn(new Success(1));
 
         $callable = parallel(function () {
             return 0;
         }, $mock);
 
-        $this->assertSame(1, Promise\wait($callable()));
+        $this->assertSame(1, $callable());
     }
 
     public function testClassStaticMethod()
@@ -59,7 +57,7 @@ class ParallelTest extends AsyncTestCase
         $result = $callable(1);
         $callable = parallel($callable);
 
-        $this->assertSame($result, Promise\wait($callable(1)));
+        $this->assertSame($result, $callable(1));
     }
 
     public function testClassInstanceMethod()
@@ -70,7 +68,7 @@ class ParallelTest extends AsyncTestCase
         $result = $callable(1);
         $callable = parallel($callable);
 
-        $this->assertSame($result, Promise\wait($callable(1)));
+        $this->assertSame($result, $callable(1));
     }
 
     public function testCallableClass()
@@ -79,7 +77,7 @@ class ParallelTest extends AsyncTestCase
         $result = $callable(1);
         $callable = parallel($callable);
 
-        $this->assertSame($result, Promise\wait($callable(1)));
+        $this->assertSame($result, $callable(1));
     }
 
     public function testUnserializableCallable()
@@ -93,7 +91,7 @@ class ParallelTest extends AsyncTestCase
             }
         };
 
-        Promise\wait(parallel($callable)());
+        parallel($callable)();
     }
 
     public function testUnserializableClassInstance()
@@ -105,7 +103,7 @@ class ParallelTest extends AsyncTestCase
 
         $callable = parallel($callable);
 
-        Promise\wait($callable());
+        $callable();
     }
 
     public function testUnserializableClassInstanceMethod()
@@ -117,7 +115,7 @@ class ParallelTest extends AsyncTestCase
 
         $callable = parallel($callable);
 
-        Promise\wait($callable());
+        $callable();
     }
 
     public function testUnserializableClassStaticMethod()
@@ -133,6 +131,6 @@ class ParallelTest extends AsyncTestCase
 
         $callable = parallel($callable);
 
-        Promise\wait($callable());
+        $callable();
     }
 }
