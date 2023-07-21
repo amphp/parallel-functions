@@ -93,7 +93,7 @@ function parallelFilter(array $array, ?callable $callable = null, int $flag = 0,
             throw new \Error('A valid $callable must be provided if $flag is set.');
         }
 
-        $callable = fn ($v): bool => (bool) $v;
+        $callable = fn (mixed $v): bool => (bool) $v;
     }
     $callable = parallel($callable, $pool);
     $callable = fn (mixed ...$v): Future => async($callable, ...$v);

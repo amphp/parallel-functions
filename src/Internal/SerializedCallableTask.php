@@ -10,7 +10,7 @@ use Amp\Sync\Channel;
  * @implements Task<mixed, null, null>
  * @internal
  */
-class SerializedCallableTask implements Task
+final class SerializedCallableTask implements Task
 {
     /**
      * @param string $function Serialized function.

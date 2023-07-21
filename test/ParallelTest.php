@@ -2,7 +2,7 @@
 
 namespace Amp\ParallelFunctions\Test;
 
-use Amp\Parallel\Worker\WorkerPool;
+use Amp\ParallelFunctions\Test\Fixture\CustomPool;
 use Amp\ParallelFunctions\Test\Fixture\TestCallables;
 use Amp\PHPUnit\AsyncTestCase;
 use Amp\Serialization\SerializationException;
@@ -39,14 +39,9 @@ class ParallelTest extends AsyncTestCase
 
     public function testCustomPool()
     {
-        $mock = $this->createMock(WorkerPool::class);
-        $mock->expects($this->once())
-            ->method("submit")
-            ->willReturn(new Success(1));
-
         $callable = parallel(function () {
             return 0;
-        }, $mock);
+        }, new CustomPool());
 
         $this->assertSame(1, $callable());
     }
@@ -97,7 +92,7 @@ class ParallelTest extends AsyncTestCase
     public function testUnserializableClassInstance()
     {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage('Uncaught Error in worker with message "When using a class instance as a callable, the class must be autoloadable"');
+        $this->expectExceptionMessage('Error thrown in context with message "When using a class instance as a callable, the class must be autoloadable" and code "0"');
 
         $callable = new UnserializableClass;
 
@@ -109,7 +104,7 @@ class ParallelTest extends AsyncTestCase
     public function testUnserializableClassInstanceMethod()
     {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage('Uncaught Error in worker with message "When using a class instance method as a callable, the class must be autoloadable"');
+        $this->expectExceptionMessage('Error thrown in context with message "When using a class instance method as a callable, the class must be autoloadable" and code "0"');
 
         $callable = [new UnserializableClass, 'instanceMethod'];
 
@@ -123,8 +118,8 @@ class ParallelTest extends AsyncTestCase
         $this->expectException(\Error::class);
         $this->expectExceptionMessage(
             PHP_VERSION_ID >= 80000 ?
-                'Uncaught Error in worker with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found"' :
-                'Uncaught Error in worker with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found"'
+                'Error thrown in context with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found" and code "0"' :
+                'Error thrown in context with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found" and code "0"'
         );
 
         $callable = [UnserializableClass::class, 'staticMethod'];
