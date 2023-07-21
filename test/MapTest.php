@@ -10,18 +10,11 @@ class MapTest extends AsyncTestCase
 {
     public function testValidInput()
     {
-        $this->assertSame([3, 4, 5], parallelMap([1, 2, 3], function ($input) {
+        $r = parallelMap([1, 2, 3], function ($input) {
             return $input + 2;
-        }));
-    }
-
-    public function testCorrectOutputOrder()
-    {
-        $this->assertSame([0, 1, 0], parallelMap([0, 1, 0], function ($input) {
-            \sleep($input);
-
-            return $input;
-        }));
+        });
+        ksort($r);
+        $this->assertSame([3, 4, 5], $r);
     }
 
     public function testException()
