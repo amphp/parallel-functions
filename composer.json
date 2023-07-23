@@ -27,10 +27,10 @@
         "amphp/amp": "^3",
         "amphp/parallel": "^2",
         "amphp/serialization": "^1",
-        "laravel/serializable-closure": "^1.0",
-        "psalm/phar": "^5.13"
+        "laravel/serializable-closure": "^1.0"
     },
     "require-dev": {
+        "psalm/phar": "^5.13",
         "amphp/php-cs-fixer-config": "v2.x-dev",
         "amphp/phpunit-util": "^3",
         "phpunit/phpunit": "^9.5.11"
