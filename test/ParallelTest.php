@@ -116,11 +116,7 @@ class ParallelTest extends AsyncTestCase
     public function testUnserializableClassStaticMethod()
     {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage(
-            PHP_VERSION_ID >= 80000 ?
-                'Error thrown in context with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found" and code "0"' :
-                'Error thrown in context with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found" and code "0"'
-        );
+        $this->expectExceptionMessage('Error thrown in context with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found" and code "0"');
 
         $callable = [UnserializableClass::class, 'staticMethod'];
 
