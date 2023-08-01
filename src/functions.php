@@ -69,7 +69,12 @@ function parallelMap(array $array, callable $callable, ?WorkerPool $pool = null)
         throw new CompositeException($errors);
     }
 
-    return $results;
+    $final = [];
+    foreach ($array as $k => $_) {
+        $final[$k] = $results[$k];
+    }
+
+    return $final;
 }
 
 /**
