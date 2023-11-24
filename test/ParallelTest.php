@@ -1,13 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Amp\ParallelFunctions\Test;
 
-use Amp\Parallel\Sync\SerializationException;
-use Amp\Parallel\Worker\Pool;
+use Amp\ParallelFunctions\Test\Fixture\CustomPool;
 use Amp\ParallelFunctions\Test\Fixture\TestCallables;
 use Amp\PHPUnit\AsyncTestCase;
-use Amp\Promise;
-use Amp\Success;
+use Amp\Serialization\SerializationException;
 use function Amp\ParallelFunctions\parallel;
 
 class UnserializableClass
@@ -34,23 +32,18 @@ class ParallelTest extends AsyncTestCase
 
         $unserializable = new class {
         };
-        Promise\wait(parallel(function () use ($unserializable) {
+        parallel(function () use ($unserializable) {
             return 1;
-        })());
+        })();
     }
 
     public function testCustomPool()
     {
-        $mock = $this->createMock(Pool::class);
-        $mock->expects($this->once())
-            ->method("enqueue")
-            ->willReturn(new Success(1));
-
         $callable = parallel(function () {
             return 0;
-        }, $mock);
+        }, new CustomPool());
 
-        $this->assertSame(1, Promise\wait($callable()));
+        $this->assertSame(1, $callable());
     }
 
     public function testClassStaticMethod()
@@ -59,7 +52,7 @@ class ParallelTest extends AsyncTestCase
         $result = $callable(1);
         $callable = parallel($callable);
 
-        $this->assertSame($result, Promise\wait($callable(1)));
+        $this->assertSame($result, $callable(1));
     }
 
     public function testClassInstanceMethod()
@@ -70,7 +63,7 @@ class ParallelTest extends AsyncTestCase
         $result = $callable(1);
         $callable = parallel($callable);
 
-        $this->assertSame($result, Promise\wait($callable(1)));
+        $this->assertSame($result, $callable(1));
     }
 
     public function testCallableClass()
@@ -79,7 +72,7 @@ class ParallelTest extends AsyncTestCase
         $result = $callable(1);
         $callable = parallel($callable);
 
-        $this->assertSame($result, Promise\wait($callable(1)));
+        $this->assertSame($result, $callable(1));
     }
 
     public function testUnserializableCallable()
@@ -93,46 +86,42 @@ class ParallelTest extends AsyncTestCase
             }
         };
 
-        Promise\wait(parallel($callable)());
+        parallel($callable)();
     }
 
     public function testUnserializableClassInstance()
     {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage('Uncaught Error in worker with message "When using a class instance as a callable, the class must be autoloadable"');
+        $this->expectExceptionMessage('Error thrown in context with message "When using a class instance as a callable, the class must be autoloadable" and code "0"');
 
         $callable = new UnserializableClass;
 
         $callable = parallel($callable);
 
-        Promise\wait($callable());
+        $callable();
     }
 
     public function testUnserializableClassInstanceMethod()
     {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage('Uncaught Error in worker with message "When using a class instance method as a callable, the class must be autoloadable"');
+        $this->expectExceptionMessage('Error thrown in context with message "When using a class instance method as a callable, the class must be autoloadable" and code "0"');
 
         $callable = [new UnserializableClass, 'instanceMethod'];
 
         $callable = parallel($callable);
 
-        Promise\wait($callable());
+        $callable();
     }
 
     public function testUnserializableClassStaticMethod()
     {
         $this->expectException(\Error::class);
-        $this->expectExceptionMessage(
-            PHP_VERSION_ID >= 80000 ?
-                'Uncaught Error in worker with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found"' :
-                'Uncaught Error in worker with message "Class \'Amp\\ParallelFunctions\\Test\\UnserializableClass\' not found"'
-        );
+        $this->expectExceptionMessage('Error thrown in context with message "Class "Amp\\ParallelFunctions\\Test\\UnserializableClass" not found" and code "0"');
 
         $callable = [UnserializableClass::class, 'staticMethod'];
 
         $callable = parallel($callable);
 
-        Promise\wait($callable());
+        $callable();
     }
 }

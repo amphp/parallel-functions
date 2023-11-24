@@ -1,30 +1,29 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Amp\ParallelFunctions\Internal;
 
-use Amp\Parallel\Worker\Environment;
+use Amp\Cancellation;
 use Amp\Parallel\Worker\Task;
+use Amp\Sync\Channel;
 
-/** @internal */
-class SerializedCallableTask implements Task
+/**
+ * @implements Task<mixed, null, null>
+ * @internal
+ */
+final class SerializedCallableTask implements Task
 {
-    /** @var string */
-    private $function;
-
-    /** @var mixed[] */
-    private $args;
-
     /**
      * @param string $function Serialized function.
      * @param array  $args Arguments to pass to the function. Must be serializable.
      */
-    public function __construct(string $function, array $args)
+    public function __construct(private readonly string $function, private readonly array $args)
     {
-        $this->function = $function;
-        $this->args = $args;
     }
 
-    public function run(Environment $environment)
+    /**
+     * Executed when running the Task in a worker.
+     */
+    public function run(Channel $channel, Cancellation $cancellation): mixed
     {
         $callable = \unserialize($this->function, ['allowed_classes' => true]);
 
