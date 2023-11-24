@@ -3,7 +3,6 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use function Amp\ParallelFunctions\parallelMap;
-use function Amp\Promise\wait;
 
 $start = microtime(true);
 

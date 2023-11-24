@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "psalm/phar": "^5.13",
-        "amphp/php-cs-fixer-config": "v2.x-dev",
+        "amphp/php-cs-fixer-config": "^2",
         "amphp/phpunit-util": "^3",
         "phpunit/phpunit": "^9.5.11"
     },
