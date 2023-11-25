@@ -39,11 +39,15 @@ class ParallelTest extends AsyncTestCase
 
     public function testCustomPool()
     {
+        $pool = new CustomPool();
+
         $callable = parallel(function () {
             return 0;
-        }, new CustomPool());
+        }, $pool);
 
         $this->assertSame(1, $callable());
+
+        $pool->shutdown();
     }
 
     public function testClassStaticMethod()
