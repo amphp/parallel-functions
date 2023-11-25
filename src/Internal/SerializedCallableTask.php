@@ -7,8 +7,8 @@ use Amp\Parallel\Worker\Task;
 use Amp\Sync\Channel;
 
 /**
- * @implements Task<mixed, null, null>
  * @internal
+ * @implements Task<mixed, never, never>
  */
 final class SerializedCallableTask implements Task
 {

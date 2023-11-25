@@ -6,25 +6,24 @@ use Amp\CompositeException;
 use Amp\Future;
 use Amp\Parallel\Worker\WorkerPool;
 use Amp\Serialization\SerializationException;
-use Closure;
 use Laravel\SerializableClosure\SerializableClosure;
-
 use function Amp\async;
 use function Amp\Future\awaitAll;
-use function Amp\Parallel\Worker\submit;
+use function Amp\Parallel\Worker\workerPool;
 
 /**
  * Parallelizes a callable.
  *
+ * @template TValue
  * @template TReturn
  *
- * @param (callable(mixed...): TReturn)  $callable Callable to parallelize.
+ * @param callable(TValue...): TReturn $callable Callable to parallelize.
  * @param WorkerPool|null $pool Worker pool instance to use or null to use the global pool.
  *
- * @return (Closure(mixed...): TReturn) Callable executing in another thread / process.
+ * @return \Closure(TValue...): TReturn Callable executing in another thread / process.
  * @throws SerializationException If the passed callable is not safely serializable.
  */
-function parallel(callable $callable, ?WorkerPool $pool = null): Closure
+function parallel(callable $callable, ?WorkerPool $pool = null): \Closure
 {
     /** @psalm-suppress DocblockTypeContradiction https://github.com/vimeo/psalm/issues/10029 */
     if ($callable instanceof \Closure) {
@@ -38,29 +37,29 @@ function parallel(callable $callable, ?WorkerPool $pool = null): Closure
     }
 
     return function (...$args) use ($pool, $callable): mixed {
-        $task = new Internal\SerializedCallableTask($callable, $args);
-        return ($pool ? $pool->submit($task) : submit($task))->getFuture()->await();
+        return ($pool ?? workerPool())
+            ->submit(new Internal\SerializedCallableTask($callable, $args))
+            ->await();
     };
 }
 
 /**
  * Parallel version of array_map, but with an argument order consistent with the filter function.
  *
- * @template Tk as array-key
+ * @template TKey of array-key
  * @template TValue
  * @template TReturn
  *
- * @param array<Tk, TValue>     $array
- * @param (callable(TValue): TReturn)|(callable(): TReturn)  $callable
+ * @param array<TKey, TValue> $array
+ * @param callable(TValue...): TReturn $callable
  * @param WorkerPool|null $pool Worker pool instance to use or null to use the global pool.
  *
- * @return array<Tk, TReturn> Resolves to the result once the operation finished.
+ * @return array<TKey, TReturn> Resolves to the result once the operation finished.
  * @throws \Error If the passed callable is not safely serializable.
  * @throws CompositeException If at least one call throws an exception.
  */
 function parallelMap(array $array, callable $callable, ?WorkerPool $pool = null): array
 {
-    /** @psalm-suppress PossiblyInvalidArgument Ignore this, we can't represent a variable number of args with templates */
     $callable = parallel($callable, $pool);
     $callable = fn (mixed $v): Future => async($callable, $v);
     [$errors, $results] = awaitAll(\array_map($callable, $array));
@@ -80,16 +79,16 @@ function parallelMap(array $array, callable $callable, ?WorkerPool $pool = null)
 /**
  * Parallel version of array_filter.
  *
- * @template Tk as array-key
+ * @template TKey of array-key
  * @template TValue
  *
- * @param array<Tk, mixed> $array
+ * @param array<TKey, TValue> $array
  * @param WorkerPool|null $pool Worker pool instance to use or null to use the global pool.
  *
  * @throws \Error If the passed callable is not safely serializable.
  * @throws CompositeException If at least one call throws an exception.
  *
- * @return array<Tk, TValue>
+ * @return array<TKey, TValue>
  */
 function parallelFilter(array $array, ?callable $callable = null, int $flag = 0, ?WorkerPool $pool = null): array
 {
