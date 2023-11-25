@@ -10,9 +10,11 @@ use function Amp\ParallelFunctions\parallelMap;
 // always use the same process pool, which can simply be the default pool.
 
 for ($i = 0; $i < 30; $i++) {
-    $pool = new ContextWorkerPool();
+    $pool = new ContextWorkerPool(4);
 
-    $result = parallelMap(range(1, 50), function () {
-        return 2;
+    $result = parallelMap(range(1, 20), function (): void {
+        echo getmypid() . "\n";
     }, $pool);
+
+    $pool->shutdown();
 }
